@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test:qa": "npx cross-env TEST_ENV=qa npx playwright test",
+    "test:dev": "npx cross-env TEST_ENV=dev npx playwright test"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RavilesX/Playwright_Framework_JS.git"
@@ -17,7 +20,8 @@
   "homepage": "https://github.com/RavilesX/Playwright_Framework_JS#readme",
   "devDependencies": {
     "@playwright/test": "^1.59.1",
-    "@types/node": "^25.6.0"
+    "@types/node": "^25.6.0",
+    "cross-env": "^10.1.0"
   },
   "dependencies": {
     "dotenv": "^17.4.2"

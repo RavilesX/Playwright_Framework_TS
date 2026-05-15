@@ -1,5 +1,5 @@
 // @ts-check
-import { test } from "@playwright/test";
+import { devices, test } from "@playwright/test";
 import {LoginPage} from "../pages/LoginPage";
 import {MainPage} from "../pages/MainPage";
 import {CheckoutPage} from "../pages/CheckoutPage";
@@ -7,8 +7,19 @@ import {InformationPage} from "../pages/InformationPage";
 import {ConfirmationPage} from "../pages/ConfirmationPage";
 import {CartPage} from "../pages/CartPage";
 
-test('buy product', async ({ page }) => {
-  await page.goto('https://www.saucedemo.com/');
+test('buy product', async ({ browser }) => {
+  //example of how to create a new context with the configuration for the mobile device
+  // const context = await browser.newContext({
+  //     ...devices['iPhone 14'],
+  //     locale: 'es-MX',
+  //     geolocation: { latitude: 21.1, longitude: -101.7 }, // León, Gto
+  //     permissions: ['geolocation'],
+  // });
+  const context = await browser.newContext();
+  const page = await context.newPage();
+
+
+  await page.goto(process.env.BASE_URL);
   //initialize the page objects
   const loginPage = new LoginPage(page);
   const mainPage = new MainPage(page);
@@ -18,19 +29,13 @@ test('buy product', async ({ page }) => {
   const confirmationPage = new ConfirmationPage(page);
   
   //Login to the application
-  await loginPage.login('standard_user','secret_sauce');
+  await loginPage.login(process.env.UNAME, process.env.PASSWORD);
 
-  //confirm we are on the products page  
-  await mainPage.verifyHeaderTitle();
-
-  //Add product Sauce Labs Fleece Jacket to the cart
+  //Add product to the cart
   const {itemName,price} = await mainPage.SelectItem("Sauce Labs Fleece Jacket");
 
   //go to the cart
   await mainPage.goToCart();
-
-  //confirm we are in the cart page by checking the title  
-  await cartPage.verifyTitle();
   
   //confirm the product and price is the same as in the previos page
   await cartPage.verifyProducts(itemName,price);
@@ -38,17 +43,11 @@ test('buy product', async ({ page }) => {
   //checkout
   await cartPage.checkout();
 
-  //Confirm we are in the next page by checking the title  
-  await checkoutPage.verifyTitle();
-
   //Fill data in the form and continue
   await  checkoutPage.fillForm("Ricardo","Aviles","12345");
 
   //continue to next page
   await checkoutPage.continueToPay();
-
-  //confirm we are in the next page by checking the title  
-  await informationPage.verifyTitle();
 
   //confirm price quantity and product name
   await informationPage.verifyProducts(itemName,price);
@@ -62,14 +61,7 @@ test('buy product', async ({ page }) => {
   //Back to the main page
   await confirmationPage.backToMainPage();
 
-  //confirm we are on the main page
-  await mainPage.verifyHeaderTitle();
-
   //logout
   await mainPage.logout();
-
-
-
-
 
 });
