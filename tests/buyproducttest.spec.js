@@ -6,7 +6,7 @@ import {CheckoutPage} from "../pages/CheckoutPage";
 import {InformationPage} from "../pages/InformationPage";
 import {ConfirmationPage} from "../pages/ConfirmationPage";
 import {CartPage} from "../pages/CartPage";
-const BASE_URL = process.env.BASE_URL ?? (() => { throw new Error('BASE_URL is not defined in .env'); })();
+import {BASE_URL} from "../utils/envUtils";
 const jsonData = JSON.parse(JSON.stringify(require('../testdata/testdata.json')));
 
 
