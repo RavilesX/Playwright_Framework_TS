@@ -1,0 +1,50 @@
+[
+    {   
+        "username":"standard_user",
+        "password":"secret_sauce",
+        "productName":"Saabs Fleece Jacket",
+        "name":"Ricardo",
+        "lastName":"Aviles",
+        "postalCode":"12345"
+    },
+    {
+        "username":"locked_out_user",
+        "password":"secret_sauce", 
+        "productName":"Sauce Labs Backpack",
+        "name":"Jorge",
+        "lastName":"Rodriguez",
+        "postalCode":"34728"
+    },
+        {
+        "username":"problem_user",
+        "password":"secret_sauce",
+        "productName":"Sauce Labs Onesie",
+        "name":"Mauana",
+        "lastName":"chavez",
+        "postalCode":"67583"
+    },
+    {
+        "username":"performance_glitch_user",
+        "password":"secret_sauce", 
+        "productName":"Sauce Labs Onesie",
+        "name":"Veronica",
+        "lastName":"Pschulera",
+        "postalCode":"18283"
+    },
+        {
+        "username":"error_user",
+        "password":"secret_sauce",
+        "productName":"Saabs Fleece Jacket",
+        "name":"Felipe",
+        "lastName":"Pawlowski",
+        "postalCode":"67584"
+    },
+    {
+        "username":"visual_user",
+        "password":"secret_sauce", 
+        "productName":"Sauce Labs Bolt T-Shirt",
+        "name":"Ernesto",
+        "lastName":"Lozano",
+        "postalCode":"34562"
+    }
+]

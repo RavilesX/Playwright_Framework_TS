@@ -295,6 +295,15 @@ body.theme-light {
   --muted: oklch(0.52 0.012 250);
   --shadow: 0 1px 2px oklch(0 0 0 / 0.04), 0 8px 24px -16px oklch(0 0 0 / 0.12);
 }
+body.theme-light .sidebar { background: linear-gradient(180deg, var(--bg) 0%, oklch(0.82 0.008 250) 100%); }
+body.theme-light .stat .label { color: oklch(1 0 0 / 0.7); }
+body.theme-light .stat .sub { color: oklch(1 0 0 / 0.6); }
+body.theme-light .test-row:hover,
+body.theme-light .test-row.open { color: oklch(1 0 0 / 0.9); }
+body.theme-light .test-row:hover .test-file,
+body.theme-light .test-row.open .test-file { color: oklch(1 0 0 / 0.6); }
+body.theme-light .test-row:hover .test-meta,
+body.theme-light .test-row.open .test-meta { color: oklch(1 0 0 / 0.6); }
 body.theme-light .brand-logo { background: #000; }
 body.theme-light .hero-main { background: linear-gradient(135deg, #fff 0%, oklch(0.98 0.004 250) 100%); }
 body.theme-light .code-block { background: oklch(0.97 0.004 250); color: var(--text-2); }

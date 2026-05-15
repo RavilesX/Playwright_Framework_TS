@@ -3,17 +3,10 @@ import { test, expect } from '@playwright/test';
 class MainPage{
     constructor(page){
         this.page = page;
-        this.headerTitleLbl = page.locator("//div[@class='app_logo']");
         this.itemList = page.locator("//div[@class='inventory_item']");
         this.shoppingCartIcn = page.locator("//a[@class='shopping_cart_link']");
         this.menuBtn = page.locator("//button[@id='react-burger-menu-btn']");
         this.logoutBtn = page.locator("//a[@id='logout_sidebar_link']");
-    }
-
-    async verifyHeaderTitle(){
-        //confirm we are on the products page by checking the header title
-        await expect(this.headerTitleLbl)
-            .toHaveText("Swag Labs");        
     }
 
     async SelectItem(itemName){

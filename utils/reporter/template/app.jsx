@@ -573,7 +573,7 @@ function App() {
             </div>
             <div style={{display:"flex",gap:8,alignItems:"center"}}>
               {GLOBAL_TREND.length > 1 && <Sparkline values={GLOBAL_TREND.map(t => t.passed)} color="var(--pass)"/>}
-              <button className="btn"><Icon.Settings/></button>
+              <button className="btn" onClick={() => window.postMessage({ type: '__activate_edit_mode' }, '*')}><Icon.Settings/></button>
             </div>
           </div>
 
