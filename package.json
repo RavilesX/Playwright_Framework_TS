@@ -1,0 +1,25 @@
+{
+  "name": "playwright_framework_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RavilesX/Playwright_Framework_JS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RavilesX/Playwright_Framework_JS/issues"
+  },
+  "homepage": "https://github.com/RavilesX/Playwright_Framework_JS#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.6.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
+}
