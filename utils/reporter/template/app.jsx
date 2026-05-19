@@ -40,7 +40,11 @@ function Hero() {
               <span className="pill"><Icon.Git/> {D.meta.branch} · <span className="mono" style={{color:"var(--text)"}}>{D.meta.commit}</span></span>
               <span className="pill"><Icon.Clock/> {D.meta.startedAt}</span>
             </div>
-            <div className="hero-title">{D.meta.commitMsg}</div>
+            <div className="hero-title" style={{display:"inline-flex",alignItems:"center",gap:10}}>
+              <Icon.Playwright/>
+              <span>Playwright Automation Framework + JS</span>
+              <Icon.Js/>
+            </div>
             <div className="hero-sub">
               by <span style={{color:"var(--text)"}}>@{D.meta.author}</span> · {D.meta.ci} · {D.meta.runner} · {D.meta.shards} shards · {D.meta.workers} workers
             </div>
@@ -96,7 +100,7 @@ function Hero() {
 }
 
 // =============== Charts row ===============
-function ChartsRow() {
+function ChartsRow({ runIdx, onSelectRun }) {
   const D = useRun();
   const projectBreakdown = useMemo(() => {
     const map = {};
@@ -122,7 +126,7 @@ function ChartsRow() {
           </div>
         </div>
         <div className="card-body">
-          <TrendChart trend={GLOBAL_TREND} />
+          <TrendChart trend={GLOBAL_TREND} currentIdx={runIdx} onSelect={onSelectRun} />
         </div>
       </div>
 
@@ -300,14 +304,25 @@ function TestDetail({ test }) {
             const isImage = a.contentType && a.contentType.startsWith("image/");
 
             if (isTrace && a.path) {
+              const isFile = typeof location !== "undefined" && location.protocol === "file:";
+              const traceUrl = `trace/index.html?trace=${encodeURIComponent("../" + a.path)}`;
               return (
                 <div key={i} style={{padding:"8px 0",borderBottom:"1px dashed var(--line-soft)"}}>
-                  <div className="att"><span><Icon.Trace/> {a.name}</span><span style={{color:"var(--accent)"}}>trace viewer</span></div>
-                  <iframe
-                    src={`trace/index.html?trace=${encodeURIComponent("../" + a.path)}`}
-                    style={{width:"100%",height:500,border:"1px solid var(--line-soft)",borderRadius:8,marginTop:8}}
-                    title="Trace viewer"
-                  />
+                  <div className="att">
+                    <span><Icon.Trace/> {a.name}</span>
+                    <span style={{display:"flex",gap:14,alignItems:"center"}}>
+                      {!isFile && <a href={traceUrl} target="_blank" rel="noreferrer" style={{color:"var(--accent)"}}>open trace viewer ↗</a>}
+                      <a href={a.path} download style={{color:"var(--accent)"}}>download trace.zip ↓</a>
+                    </span>
+                  </div>
+                  {isFile && (
+                    <div style={{marginTop:8,padding:"12px 14px",border:"1px solid var(--line-soft)",borderRadius:8,background:"oklch(0.18 0.012 250)",color:"var(--muted)",fontSize:12,lineHeight:1.6}}>
+                      <div style={{color:"var(--flaky)",fontWeight:600,marginBottom:6}}>⚠ Trace viewer needs HTTP server</div>
+                      Report opened via <span className="mono">file://</span>. Browsers block <span className="mono">fetch()</span> of <span className="mono">trace.zip</span> on file://. Run:
+                      <div className="code-block" style={{marginTop:8,padding:"8px 10px"}}>npx playwright show-report</div>
+                      Or drop the downloaded <span className="mono">trace.zip</span> into <a href="https://trace.playwright.dev" target="_blank" rel="noreferrer" style={{color:"var(--accent)"}}>trace.playwright.dev</a>.
+                    </div>
+                  )}
                 </div>
               );
             }
@@ -354,10 +369,11 @@ function TestDetail({ test }) {
   );
 }
 
-function TestRow({ test, open, onToggle, maxDur }) {
+function TestRow({ test, open, onToggle, maxDur, openAttempt, onToggleAttempt }) {
   const meta = STATUS_META[test.status];
   const durPct = (test.duration / maxDur) * 100;
   const durClass = test.duration > maxDur * 0.66 ? "veryslow" : test.duration > maxDur * 0.33 ? "slow" : "";
+  const attempts = test.attempts || [];
   return (
     <>
       <div className={"test-row " + (open?"open":"")} onClick={onToggle}>
@@ -367,7 +383,7 @@ function TestRow({ test, open, onToggle, maxDur }) {
           <div className="test-file">{test.file}</div>
         </div>
         <div className="test-meta">{test.project}</div>
-        <div className="test-meta">{test.retries > 0 ? `${test.retries} retry${test.retries>1?"s":""}` : "—"}</div>
+        <div className="test-meta">{test.retries > 0 ? `${test.retries} retr${test.retries>1?"ies":"y"}` : "—"}</div>
         <div className="test-meta">{fmt(test.duration)}</div>
         <div className="duration-cell">
           <div className="duration-bar"><div className={"fill " + durClass} style={{width: Math.min(100, durPct) + "%"}}/></div>
@@ -375,6 +391,31 @@ function TestRow({ test, open, onToggle, maxDur }) {
         <div style={{color:"var(--muted)"}}><Icon.Chevron open={open}/></div>
       </div>
       {open && <TestDetail test={test} />}
+      {attempts.map((att, i) => {
+        const attOpen = openAttempt === i;
+        const attMeta = STATUS_META[att.status] || STATUS_META.failed;
+        const attDurPct = (att.duration / maxDur) * 100;
+        const attDurClass = att.duration > maxDur * 0.66 ? "veryslow" : att.duration > maxDur * 0.33 ? "slow" : "";
+        return (
+          <React.Fragment key={"att-"+i}>
+            <div className={"test-row attempt-row " + (attOpen?"open":"")} onClick={() => onToggleAttempt(i)}>
+              <div className={"status-icon " + att.status}>{attMeta.icon}</div>
+              <div style={{paddingLeft:18}}>
+                <div className="test-title" style={{fontSize:13,color:"var(--muted)"}}>↳ attempt #{(att.retry||0)+1} (retry)</div>
+                <div className="test-file">{test.title}</div>
+              </div>
+              <div className="test-meta">{test.project}</div>
+              <div className="test-meta">—</div>
+              <div className="test-meta">{fmt(att.duration)}</div>
+              <div className="duration-cell">
+                <div className="duration-bar"><div className={"fill " + attDurClass} style={{width: Math.min(100, attDurPct) + "%"}}/></div>
+              </div>
+              <div style={{color:"var(--muted)"}}><Icon.Chevron open={attOpen}/></div>
+            </div>
+            {attOpen && <TestDetail test={{...att, file: test.file, title: test.title, project: test.project}} />}
+          </React.Fragment>
+        );
+      })}
     </>
   );
 }
@@ -386,10 +427,12 @@ function TestsTable() {
   const [status, setStatus] = useState("all");
   const [project, setProject] = useState("all");
   const [open, setOpen] = useState(null);
+  const [openAttempt, setOpenAttempt] = useState({});
 
   // Reset open row and filters when switching runs
   useEffect(() => {
     setOpen(null);
+    setOpenAttempt({});
     setQuery("");
     setStatus("all");
     setProject("all");
@@ -423,7 +466,15 @@ function TestsTable() {
       </div>
       <div>
         {filtered.slice(0, 80).map(t => (
-          <TestRow key={t.id} test={t} maxDur={maxDur} open={open === t.id} onToggle={() => setOpen(open === t.id ? null : t.id)} />
+          <TestRow
+            key={t.id}
+            test={t}
+            maxDur={maxDur}
+            open={open === t.id}
+            onToggle={() => setOpen(open === t.id ? null : t.id)}
+            openAttempt={openAttempt[t.id]}
+            onToggleAttempt={(i) => setOpenAttempt(prev => ({...prev, [t.id]: prev[t.id] === i ? null : i}))}
+          />
         ))}
         {filtered.length === 0 && (
           <div style={{padding:"40px 18px",textAlign:"center",color:"var(--muted)",fontSize:13}}>no tests match these filters</div>
@@ -578,7 +629,7 @@ function App() {
           </div>
 
           <Hero/>
-          <ChartsRow/>
+          <ChartsRow runIdx={runIdx} onSelectRun={setRunIdx}/>
           <SecondaryRow/>
           <RecentRuns runIdx={runIdx} onSelectRun={setRunIdx} />
           <TestsTable/>

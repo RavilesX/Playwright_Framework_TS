@@ -1,7 +1,8 @@
 // @ts-check
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 import dotenv from 'dotenv';
 import  fs from 'fs';
+import { buildProjects } from './utils/projectGroups.js';
 
 const envFile = `.env.${process.env.NODE_ENV || 'dev'}`;
 if (fs.existsSync(envFile)) {
@@ -28,9 +29,9 @@ export default defineConfig({
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
+  /* Retry 2 times on CI only and 1 times locally*/ 
+  retries: process.env.CI ? 2 : 1,
+  /* Opt out of parallel tests on CI. change 'undefined' to 1 to run tests sequentially in others environments apart from CI*/
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['./utils/reporter/CustomHtmlReporter.js']],
@@ -48,43 +49,8 @@ export default defineConfig({
     headless: false,
   },
 
-  /* Configure projects for major browsers */
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
-  ],
+  /* Projects generated from utils/projectGroups.js — one project per device, grouped by prefix (desktop:, ios:, android:). Run a group via npm scripts (test:desktop, test:ios, test:android) or pass multiple --project flags. */
+  projects: buildProjects(),
 
   /* Run your local dev server before starting the tests */
   // webServer: {

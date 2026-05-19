@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test:qa": "npx cross-env TEST_ENV=qa npx playwright test",
-    "test:dev": "npx cross-env TEST_ENV=dev npx playwright test"
+    "test:dev": "npx cross-env TEST_ENV=dev npx playwright test",
+    "test:CI": "npx cross-env TEST_ENV=CI npx playwright test",
+    "test:desktop": "npx cross-env TEST_ENV=dev npx playwright test --project=\"desktop:Desktop Chrome\" --project=\"desktop:Desktop Firefox\"",
+    "test:ios": "npx cross-env TEST_ENV=dev npx playwright test --project=\"ios:iPhone 12\" --project=\"ios:iPhone 14\" --project=\"ios:iPad Pro 11\"",
+    "test:android": "npx cross-env TEST_ENV=dev npx playwright test --project=\"android:Pixel 5\" --project=\"android:Nokia N9\" --project=\"android:Galaxy S9+\""
   },
   "repository": {
     "type": "git",

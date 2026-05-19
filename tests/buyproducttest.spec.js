@@ -7,7 +7,8 @@ import {InformationPage} from "../pages/InformationPage";
 import {ConfirmationPage} from "../pages/ConfirmationPage";
 import {CartPage} from "../pages/CartPage";
 import {BASE_URL} from "../utils/envUtils";
-const jsonData = JSON.parse(JSON.stringify(require('../testdata/testdata.json')));
+import {readJson} from "../utils/fileUtils";
+const jsonData = readJson('testdata.json');
 
 
 
@@ -15,7 +16,7 @@ test.describe('DDT for buying a product', function () {
 
   for (const data of jsonData) {
 
-    test.describe(`Buying ${data.productName} with user ${data.username}`, function () {
+    test.describe(`Buying ${data.productName} with user ${data.name}`, function () {
 
       test('Buy Product', async ({ browser }) => {
         //example of how to create a new context with the configuration for the mobile device

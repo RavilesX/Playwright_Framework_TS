@@ -25,6 +25,19 @@ const Icon = {
   Film: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 3v18M17 3v18M3 12h18M3 7.5h4M3 16.5h4M17 7.5h4M17 16.5h4"/></svg>,
   Trace: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>,
   Copy: () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>,
+  Playwright: () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-label="Playwright">
+      <circle cx="8" cy="11" r="4.2" fill="#2EAD33"/>
+      <circle cx="15" cy="9" r="3.2" fill="#E2574C"/>
+      <circle cx="16" cy="15" r="2.8" fill="#2D4552"/>
+    </svg>
+  ),
+  Js: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-label="JavaScript">
+      <rect width="24" height="24" rx="3" fill="#F7DF1E"/>
+      <text x="12" y="17" textAnchor="middle" fontSize="10" fontWeight="800" fill="#000" fontFamily="system-ui,Segoe UI,Roboto,sans-serif">JS</text>
+    </svg>
+  ),
 };
 
 // ============ Browser glyph (original, not the real browser logos) ============
@@ -100,17 +113,24 @@ function Sparkline({ values, color = "var(--accent)", height = 36, width = 96 })
 }
 
 // ============ Stacked trend bar chart ============
-function TrendChart({ trend }) {
+function TrendChart({ trend, currentIdx, onSelect }) {
   const maxTotal = Math.max(...trend.map(r => r.passed + r.failed + r.flaky));
+  const selectedIdx = typeof currentIdx === "number" ? currentIdx : trend.length - 1;
   return (
     <>
       <div className="trend">
         {trend.map((r, i) => {
           const total = r.passed + r.failed + r.flaky;
           const scale = 200 / maxTotal;
-          const isCurrent = i === trend.length - 1;
+          const isSelected = i === selectedIdx;
           return (
-            <div className="trend-bar" key={i} style={{ height: total * scale + "px", opacity: isCurrent ? 1 : 0.85 }}>
+            <div
+              className={"trend-bar" + (isSelected ? " selected" : "") + (onSelect ? " clickable" : "")}
+              key={i}
+              style={{ height: total * scale + "px", opacity: isSelected ? 1 : 0.6 }}
+              onClick={onSelect ? () => onSelect(i) : undefined}
+              title={`${r.run} · ${r.ago}`}
+            >
               {r.flaky > 0 && <div className="seg flaky" style={{ height: (r.flaky * scale) + "px" }}/>}
               {r.failed > 0 && <div className="seg failed" style={{ height: (r.failed * scale) + "px" }}/>}
               <div className="seg passed" style={{ height: (r.passed * scale) + "px" }}/>
@@ -127,7 +147,7 @@ function TrendChart({ trend }) {
       </div>
       <div className="trend-axis">
         {trend.map((r, i) => (
-          <div key={i} className={i === trend.length - 1 ? "trend-current" : ""}>{r.run.replace("#","")}</div>
+          <div key={i} className={i === selectedIdx ? "trend-current" : ""}>{r.run.replace("#","")}</div>
         ))}
       </div>
     </>
