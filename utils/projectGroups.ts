@@ -11,7 +11,7 @@ const GROUPS = {
   android: ['Pixel 5', 'Nokia N9', 'Galaxy S9+'],
 };
 
-function buildProjects() {
+export function buildProjects(): { name: string; use: any }[] {
   return Object.entries(GROUPS).flatMap(([group, list]) =>
     list.map(device => ({
       name: `${group}:${device}`,
@@ -19,5 +19,3 @@ function buildProjects() {
     }))
   );
 }
-
-export { buildProjects };

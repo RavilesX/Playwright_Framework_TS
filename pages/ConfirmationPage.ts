@@ -1,7 +1,11 @@
-import { expect } from '@playwright/test';
+import { Page, expect, Locator } from '@playwright/test';
 
-class ConfirmationPage {
-    constructor(page){
+export class ConfirmationPage {
+    readonly page: Page;
+    readonly confirmationMsgLbl: Locator;
+    readonly backHomeBtn: Locator;
+
+    constructor(page: Page){
         this.page=page;
         this.confirmationMsgLbl = page.locator("//h2[@class='complete-header']");
         this.backHomeBtn = page.locator("//button[@id='back-to-products']");
@@ -15,6 +19,4 @@ class ConfirmationPage {
         await this.backHomeBtn.click();
     }
 
-
 }
-export { ConfirmationPage };

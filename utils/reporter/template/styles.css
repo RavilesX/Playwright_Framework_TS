@@ -269,6 +269,23 @@ button { font-family: inherit; }
   repeating-linear-gradient(90deg, transparent 0 12px, oklch(0.78 0.14 235 / 0.06) 12px 13px),
   var(--bg-2); }
 
+/* Real media attachments (screenshots / video) — the media IS the card */
+.att-media {
+  border: 1px solid var(--line-soft); border-radius: 8px; overflow: hidden;
+  background: var(--bg-2); display: flex; flex-direction: column;
+  grid-column: span 2;
+}
+.att-media-img {
+  width: 100%; display: block; max-height: 360px; object-fit: contain;
+  background: oklch(0.14 0.01 250); cursor: zoom-in;
+}
+.att-media video.att-media-img { cursor: default; }
+.att-media-cap {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+  border-top: 1px solid var(--line-soft);
+}
+
 /* Sidebar runs */
 .run-card { padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line-soft); display: grid; grid-template-columns: 1fr auto; gap: 8px; cursor: pointer; }
 .run-card:hover { background: var(--surface); }

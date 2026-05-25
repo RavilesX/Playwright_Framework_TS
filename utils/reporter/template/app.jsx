@@ -328,17 +328,25 @@ function TestDetail({ test }) {
             }
             if (isImage && a.path) {
               return (
-                <div key={i} style={{padding:"8px 0",borderBottom:"1px dashed var(--line-soft)"}}>
-                  <div className="att"><span><Icon.Camera/> {a.name}</span></div>
-                  <img src={a.path} alt={a.name} style={{maxWidth:"100%",borderRadius:6,marginTop:8,border:"1px solid var(--line-soft)"}}/>
+                <div key={i} className="att-media">
+                  <a href={a.path} target="_blank" rel="noreferrer" title="Open full size">
+                    <img src={a.path} alt={a.name} className="att-media-img"/>
+                  </a>
+                  <div className="att-media-cap">
+                    <span><Icon.Camera/> {a.name}</span>
+                    <a href={a.path} target="_blank" rel="noreferrer" style={{color:"var(--accent)"}}>open ↗</a>
+                  </div>
                 </div>
               );
             }
             if (isVideo && a.path) {
               return (
-                <div key={i} className="att video">
-                  <span><Icon.Film/> {a.name}</span>
-                  <a href={a.path} style={{color:"var(--accent)"}} target="_blank" rel="noreferrer">open →</a>
+                <div key={i} className="att-media">
+                  <video controls preload="metadata" src={a.path} className="att-media-img"/>
+                  <div className="att-media-cap">
+                    <span><Icon.Film/> {a.name}</span>
+                    <a href={a.path} download style={{color:"var(--accent)"}}>download ↓</a>
+                  </div>
                 </div>
               );
             }

@@ -1,0 +1,2 @@
+export const BASE_URL: string = process.env.BASE_URL ?? (() => { throw new Error('BASE_URL not set'); })();
+export const API_URL: string  = process.env.API_URL  ?? (() => { throw new Error('API_URL not set'); })();

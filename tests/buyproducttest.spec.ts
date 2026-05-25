@@ -1,5 +1,4 @@
-// @ts-check
-import { devices, test } from "@playwright/test";
+import { test } from "@playwright/test";
 import {LoginPage} from "../pages/LoginPage";
 import {MainPage} from "../pages/MainPage";
 import {CheckoutPage} from "../pages/CheckoutPage";
@@ -7,28 +6,17 @@ import {InformationPage} from "../pages/InformationPage";
 import {ConfirmationPage} from "../pages/ConfirmationPage";
 import {CartPage} from "../pages/CartPage";
 import {BASE_URL} from "../utils/envUtils";
-import {readJson} from "../utils/fileUtils";
-const jsonData = readJson('testdata.json');
+import {readJsonSync} from "../utils/fileUtils";
 
 
+const jsonData: any[] = readJsonSync('testdata.json');
 
 test.describe('DDT for buying a product', function () {
-
   for (const data of jsonData) {
 
     test.describe(`Buying ${data.productName} with user ${data.name}`, function () {
 
-      test('Buy Product', async ({ browser }) => {
-        //example of how to create a new context with the configuration for the mobile device
-        // const context = await browser.newContext({
-        //     ...devices['iPhone 14'],
-        //     locale: 'es-MX',
-        //     geolocation: { latitude: 21.1, longitude: -101.7 }, // León, Gto
-        //     permissions: ['geolocation'],
-        // });
-        const context = await browser.newContext();
-        const page = await context.newPage();
-
+      test('Buy Product', async ({ page }) => {
         await page.goto(BASE_URL);
         //initialize the page objects
         const loginPage = new LoginPage(page);
@@ -48,7 +36,7 @@ test.describe('DDT for buying a product', function () {
         await mainPage.goToCart();
 
         //confirm the product and price is the same as in the previos page
-        await cartPage.verifyProducts(itemName, price);
+        await cartPage.verifyProducts([itemName], [price]);
 
         //checkout
         await cartPage.checkout();
@@ -60,7 +48,7 @@ test.describe('DDT for buying a product', function () {
         await checkoutPage.continueToPay();
 
         //confirm price quantity and product name
-        await informationPage.verifyProducts(itemName, price);
+        await informationPage.verifyProducts([itemName], [price]);
 
         //finish the order
         await informationPage.finish();

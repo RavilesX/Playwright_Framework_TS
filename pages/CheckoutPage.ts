@@ -1,7 +1,13 @@
-import { expect } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 
-class CheckoutPage {
-    constructor(page){
+export class CheckoutPage {
+    readonly page: Page;
+    readonly firstNameTxt: Locator;
+    readonly lastNameTxt: Locator;
+    readonly zipCodeTxt: Locator;
+    readonly continueBtn: Locator;
+
+    constructor(page: Page) {
         this.page = page;
         this.firstNameTxt = page.getByPlaceholder("First Name");
         this.lastNameTxt = page.getByPlaceholder("Last Name");
@@ -9,7 +15,7 @@ class CheckoutPage {
         this.continueBtn = page.getByRole('button',{name:'continue'});
         }
 
-    async fillForm(firstName,lastName,postalCode){
+    async fillForm(firstName: string, lastName: string, postalCode: string){
         await this.firstNameTxt.fill(firstName);
         await this.lastNameTxt.fill(lastName);
         await this.zipCodeTxt.fill(postalCode);
@@ -20,4 +26,3 @@ class CheckoutPage {
     }
 
 }
-export {CheckoutPage}
