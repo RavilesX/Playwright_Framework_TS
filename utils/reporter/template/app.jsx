@@ -42,8 +42,8 @@ function Hero() {
             </div>
             <div className="hero-title" style={{display:"inline-flex",alignItems:"center",gap:10}}>
               <Icon.Playwright/>
-              <span>Playwright Automation Framework + JS</span>
-              <Icon.Js/>
+              <span>Playwright Automation Framework + TS</span>
+              <Icon.Ts/>
             </div>
             <div className="hero-sub">
               by <span style={{color:"var(--text)"}}>@{D.meta.author}</span> · {D.meta.ci} · {D.meta.runner} · {D.meta.shards} shards · {D.meta.workers} workers

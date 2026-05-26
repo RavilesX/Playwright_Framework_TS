@@ -38,6 +38,12 @@ const Icon = {
       <text x="12" y="17" textAnchor="middle" fontSize="10" fontWeight="800" fill="#000" fontFamily="system-ui,Segoe UI,Roboto,sans-serif">JS</text>
     </svg>
   ),
+  Ts: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-label="TypeScript">
+      <rect width="24" height="24" rx="3" fill="#3178C6"/>
+      <text x="12" y="17" textAnchor="middle" fontSize="10" fontWeight="800" fill="#FFF" fontFamily="system-ui,Segoe UI,Roboto,sans-serif">TS</text>
+    </svg>
+  ),
 };
 
 // ============ Browser glyph (original, not the real browser logos) ============
